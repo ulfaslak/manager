@@ -303,8 +303,6 @@ def post_from_reddit(subreddit):
                 if not tweet_is_tweeted(load['data']['children'][i]['data']['title']):
                     title = load['data']['children'][i]['data']['title']
                     url = load['data']['children'][i]['data']['url']
+                    update = str(title + " " + url)
+                    t.statuses.update(status=update)
                     break
-
-    update = str(title + " " + url)
-    
-    t.statuses.update(status=update)
