@@ -96,7 +96,7 @@ def auto_rt(q, count=2, result_type="recent"):
                 print("error: %s" % (str(e)))
 
 
-def auto_follow(q, count=1, result_type="recent"):
+def auto_follow(q, count=5, result_type="recent"):
     """
         Follows anyone who tweets about a specific phrase (hashtag, word, etc.)
     """
@@ -120,10 +120,10 @@ def auto_follow(q, count=1, result_type="recent"):
     del dnf_list
 
     print "Looking through the %d tweet(s):\n" % count
-    for tweet in result['statuses']:
-        print tweet['text']
-    else:
-        print "\n"
+#    for tweet in result['statuses']:
+#        print tweet['text']
+#    else:
+#        print "\n"
 
     for tweet in result["statuses"]:
         if is_feasable(tweet) and is_likely_english(tweet):
@@ -267,7 +267,7 @@ def is_likely_english(tweet):
         else:
             continue
 
-    if return_determinant > 3:
+    if return_determinant > 5:
         return_type = True
 
     return return_type
