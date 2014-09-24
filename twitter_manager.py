@@ -22,12 +22,12 @@ import urllib
 import json
 import nltk
 
-# put your tokens, keys, secrets, and Twitter handle in the following variables
+# twitter tokens, keys, secrets, and Twitter handle in the following variables
 CONSUMER_KEY = 'PerJIpkSYQchWCkZvoYVlVduV'
 CONSUMER_SECRET ='oqOFSnSJj4lKlxaNMOeKNrY7baA149QAt6cppchfw1ZgDpk710'
 OAUTH_TOKEN = '2749655899-rBxZMaf3TSXnsrbhpRKm63ASU80BZpCrglobZKT'
 OAUTH_TOKEN_SECRET = 'pqMgG4KSVS395DNJ6snYKvQNjxbQg1ggHyglFEOutvLTy'
-TWITTER_HANDLE = "ulfaslak"
+TWITTER_HANDLE = "rawvegangirl_"
 
 # put the full path and file name of the file you want to store your "already followed"
 # list in
@@ -89,7 +89,7 @@ def auto_rt(q, count=2, result_type="recent"):
                 print("error: %s" % (str(e)))
 
 
-def auto_follow(q, count=20, result_type="recent"):
+def auto_follow(q, count=1, result_type="recent"):
     """
         Follows anyone who tweets about a specific phrase (hashtag, word, etc.)
     """
@@ -112,7 +112,7 @@ def auto_follow(q, count=20, result_type="recent"):
     do_not_follow.update(set(dnf_list))
     del dnf_list
 
-    print "Looking through the %d tweets:\n" % count
+    print "Looking through the %d tweet(s):\n" % count
     for tweet in result['statuses']:
         print tweet['text']
     else:
@@ -264,35 +264,47 @@ def is_likely_english(tweet):
 
     return return_type
 
-ALREADY_TWEETED_FILE = "already-tweeted.csv"
+def tweet_is_tweeted(tweet):
+    """
+        Returns true of a tweet has already been tweeted
+    """
 
-def post_from_reddit():
+    # Loads already tweeted tweets
+    already_tweeted = t.statuses.user_timeline(screen_name=TWITTER_HANDLE)
+    already_tweeted = [ntweet['text'] for ntweet in already_tweeted]
+    
+    return_type = False
+
+    # Loops through tweeted tweets and sets return_type to True and breaks if it finds the tweet
+    for ntweet in already_tweeted:
+        if tweet in ntweet:
+            return_type = True
+            break
+
+    return return_type
+
+
+def post_from_reddit(subreddit):
     """
         Posts firstmost reddit content that fits in twitter format length.
     """
 
     # Storing html content of ..com/.json as string
-    urlseek = 'http://www.reddit.com/.json'
+    urlseek = 'http://www.reddit.com/r/' + subreddit + '/.json'
     html = urllib.urlopen(urlseek).read()
 
     # Converts html content to json format
     load = json.loads(html)
 
-    # Loads already tweeted tweets
-    already_tweeted = t.statuses.user_timeline(screen_name=TWITTER_HANDLE)
-
     # Loops through content to find posts of fitting length that hasn't been tweeted by me yet
     for i, _ in enumerate(load['data']['children']):
         if len(load['data']['children'][i]['data']['title']) < 117:
-            if not load['data']['children'][i]['data']['title'] in already_tweeted:
-                title = load['data']['children'][i]['data']['title']
-                url = load['data']['children'][i]['data']['url']
-                break
-            else:
-                pass
-        else:
-            pass
+            if 'imgur' in load['data']['children'][i]['data']['url']:
+                if not tweet_is_tweeted(load['data']['children'][i]['data']['title']):
+                    title = load['data']['children'][i]['data']['title']
+                    url = load['data']['children'][i]['data']['url']
+                    break
 
     update = str(title + " " + url)
-
+    
     t.statuses.update(status=update)
