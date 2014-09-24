@@ -318,3 +318,14 @@ def post_from_reddit(subreddit):
                     break
 
 
+def rt_popular():
+    """
+        Retweets a random tweet from a popular user
+    """
+
+    popular_bag = """FittyTips FoodHealth BeFitMotivation HealthTweets Eatclean Fitnesslife
+    HealtyTips FIT_MOTIVATION FitspirationaI FitnessWays HeaIthTips BeFitMotivation Raw_Vegan 
+    """
+
+    popular_list = popular_bag.split()
+    shuffle(popular_list)
