@@ -18,6 +18,9 @@ Follow Bot library. If not, see http://www.gnu.org/licenses/.
 
 from twitter import Twitter, OAuth, TwitterHTTPError
 import os
+import urllib
+import json
+import nltk
 
 # put your tokens, keys, secrets, and Twitter handle in the following variables
 CONSUMER_KEY = 'PerJIpkSYQchWCkZvoYVlVduV'
@@ -86,7 +89,7 @@ def auto_rt(q, count=2, result_type="recent"):
                 print("error: %s" % (str(e)))
 
 
-def auto_follow(q, count=5, result_type="recent"):
+def auto_follow(q, count=20, result_type="recent"):
     """
         Follows anyone who tweets about a specific phrase (hashtag, word, etc.)
     """
@@ -99,9 +102,7 @@ def auto_follow(q, count=5, result_type="recent"):
         with open(ALREADY_FOLLOWED_FILE, "w") as out_file:
             out_file.write("")
 
-        # read in the list of user IDs that the bot has already followed in the
-        # past
-
+    # read in the list of user IDs that the bot has already followed in the past
     do_not_follow = set()
     dnf_list = []
     with open(ALREADY_FOLLOWED_FILE) as in_file:
@@ -262,3 +263,36 @@ def is_likely_english(tweet):
         return_type = True
 
     return return_type
+
+ALREADY_TWEETED_FILE = "already-tweeted.csv"
+
+def post_from_reddit():
+    """
+        Posts firstmost reddit content that fits in twitter format length.
+    """
+
+    # Storing html content of ..com/.json as string
+    urlseek = 'http://www.reddit.com/.json'
+    html = urllib.urlopen(urlseek).read()
+
+    # Converts html content to json format
+    load = json.loads(html)
+
+    # Loads already tweeted tweets
+    already_tweeted = t.statuses.user_timeline(screen_name=TWITTER_HANDLE)
+
+    # Loops through content to find posts of fitting length that hasn't been tweeted by me yet
+    for i, _ in enumerate(load['data']['children']):
+        if len(load['data']['children'][i]['data']['title']) < 117:
+            if not load['data']['children'][i]['data']['title'] in already_tweeted:
+                title = load['data']['children'][i]['data']['title']
+                url = load['data']['children'][i]['data']['url']
+                break
+            else:
+                pass
+        else:
+            pass
+
+    update = str(title + " " + url)
+
+    t.statuses.update(status=update)

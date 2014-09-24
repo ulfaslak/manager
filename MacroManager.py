@@ -8,8 +8,7 @@ import twitter_manager as tm
 
 #### 1. Mine twitter for people tweeting about trending subjects
 
-tm.auto_follow_followers()
-tm.auto_unfollow_nonfollowers()
+#print "\nSearching for users to follow in trending topic: %s" % tm.trending_topics()
+#tm.auto_follow(tm.trending_topics())
 
-print "\nSearching for users to follow in trending topic: %s" % tm.trending_topics()
-tm.auto_follow(tm.trending_topics())
+tm.post_from_reddit()
