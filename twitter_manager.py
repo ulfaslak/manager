@@ -18,9 +18,16 @@ Follow Bot library. If not, see http://www.gnu.org/licenses/.
 
 from twitter import Twitter, OAuth, TwitterHTTPError
 import os
+import io
 import urllib
 import json
 import nltk
+from urllib import urlopen
+from random import randrange
+from random import shuffle
+from time import sleep
+from StringIO import StringIO
+
 
 # twitter tokens, keys, secrets, and Twitter handle in the following variables
 CONSUMER_KEY = 'PerJIpkSYQchWCkZvoYVlVduV'
@@ -237,6 +244,7 @@ def is_feasable(tweet):
     else:
         return False
 
+
 def is_likely_english(tweet):
     """
         Returns true if a tweet is likely english, otherwise false
@@ -264,6 +272,7 @@ def is_likely_english(tweet):
 
     return return_type
 
+
 def tweet_is_tweeted(tweet):
     """
         Returns true of a tweet has already been tweeted
@@ -282,6 +291,7 @@ def tweet_is_tweeted(tweet):
             break
 
     return return_type
+
 
 
 def post_from_reddit(subreddit):
@@ -306,3 +316,5 @@ def post_from_reddit(subreddit):
                     update = str(title + " " + url)
                     t.statuses.update(status=update)
                     break
+
+

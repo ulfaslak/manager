@@ -8,8 +8,8 @@ tu = pytumblr.TumblrRestClient(
 )
 
 hashtag_bag = """#fitness #lifestyle #nutrition #motivation #fitfam #healthy #wellness 
-#fitblr #fitnessmotivation #life #inspiration #workoutmotivation #training #firspo #fit
-#fitspiration #workhard #trainhard #inshape #endurance
+#fitblr #fitnessmotivation #life #inspiration #workoutmotivation #training #fitspo #fit
+#fitspiration #workhard #trainhard #inshape #endurance #healthyliving #eatclean
 """
 
 hashtag_list = hashtag_bag.split()
@@ -20,6 +20,7 @@ def post_from_tumblr(user):
 	"""
 
 	random = randrange(10)
+
 	data = tu.posts(user)
 
 	shuffle(hashtag_list)
@@ -28,6 +29,9 @@ def post_from_tumblr(user):
 	title = ' '.join(hashtags)
 	url = data['posts'][random]['photos'][0]['original_size']['url']
 
-	update = title + " " + url
+	img = urlopen(url).read()
+
+	# update = title + " " + url
 	
-	return update
+	params = {'status': title, 'media[]': img}
+	t.statuses.update_with_media(**params)
