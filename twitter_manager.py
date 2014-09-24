@@ -329,3 +329,28 @@ def rt_popular():
 
     popular_list = popular_bag.split()
     shuffle(popular_list)
+
+    _id = t.statuses.user_timeline(screen_name=popular_list[0])[0]['id']
+    t.statuses.retweet(id=_id)
+
+
+def fav_friends():
+    """
+        Randomly favorite tweets from friends
+    """
+
+    following = t.friends.ids(screen_name=TWITTER_HANDLE)["ids"]
+    shuffle(following)
+
+    tweets_list = t.statuses.user_timeline(_id=following[0])
+
+    for tweet in tweets_list:
+        if tweet['in_reply_to_status_id'] == None and not 'RT' in tweet['text']:
+            t.favorites.create(_id=tweet['id'])
+            break
+
+fav_friends()
+
+
+
+
