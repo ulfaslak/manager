@@ -1,6 +1,7 @@
 import pytumblr
 import sys
 from twitter_manager import *
+from location_coordinates import *
 
 tu = pytumblr.TumblrRestClient(
 	'1e6SLA3EPSA6buqX7yeDYEMr0pACheY6d0SwSkGgvYjS4Gu5Tm',
@@ -33,5 +34,5 @@ def post_from_tumblr(user):
 
 	# update = title + " " + url
 	
-	params = {'status': title, 'media[]': img}
+	params = {'status': title, 'media[]': img, 'lat':str(location_coordinates()[0]), 'long':str(location_coordinates()[1])}
 	t.statuses.update_with_media(**params)

@@ -27,14 +27,15 @@ from random import randrange
 from random import shuffle
 from time import sleep
 from StringIO import StringIO
+from location_coordinates import *
 
 
 # twitter tokens, keys, secrets, and Twitter handle in the following variables
-CONSUMER_KEY = 'PerJIpkSYQchWCkZvoYVlVduV'
-CONSUMER_SECRET ='oqOFSnSJj4lKlxaNMOeKNrY7baA149QAt6cppchfw1ZgDpk710'
+CONSUMER_KEY = 'E19oBd9qdE1wXWiyixMfrubbI'
+CONSUMER_SECRET ='IU5qiEwHJgKAVJN0fXMux79yIzsMISSjLORB3j8sXXvUFddlnV'
 OAUTH_TOKEN = '2749655899-rBxZMaf3TSXnsrbhpRKm63ASU80BZpCrglobZKT'
 OAUTH_TOKEN_SECRET = 'pqMgG4KSVS395DNJ6snYKvQNjxbQg1ggHyglFEOutvLTy'
-TWITTER_HANDLE = "rawvegangirl_"
+TWITTER_HANDLE = "FitVeganGirl_"
 
 # put the full path and file name of the file you want to store your "already followed"
 # list in
@@ -96,7 +97,7 @@ def auto_rt(q, count=2, result_type="recent"):
                 print("error: %s" % (str(e)))
 
 
-def auto_follow(q, count=5, result_type="recent"):
+def auto_follow(q, count=10, result_type="recent"):
     """
         Follows anyone who tweets about a specific phrase (hashtag, word, etc.)
     """
@@ -307,14 +308,14 @@ def post_from_reddit(subreddit):
     load = json.loads(html)
 
     # Loops through content to find posts of fitting length that hasn't been tweeted by me yet
-    for i, _ in enumerate(load['data']['children']):
+    for i,_ in enumerate(load['data']['children']):
         if len(load['data']['children'][i]['data']['title']) < 117:
             if 'imgur' in load['data']['children'][i]['data']['url']:
                 if not tweet_is_tweeted(load['data']['children'][i]['data']['title']):
                     title = load['data']['children'][i]['data']['title']
                     url = load['data']['children'][i]['data']['url']
                     update = str(title + " " + url)
-                    t.statuses.update(status=update)
+                    t.statuses.update(status=update, lat=location_coordinates()[0], long=location_coordinates()[1])
                     break
 
 
@@ -323,8 +324,8 @@ def rt_popular():
         Retweets a random tweet from a popular user
     """
 
-    popular_bag = """FittyTips FoodHealth BeFitMotivation HealthTweets Eatclean Fitnesslife
-    HealtyTips FIT_MOTIVATION FitspirationaI FitnessWays HeaIthTips BeFitMotivation Raw_Vegan 
+    popular_bag = """FittyTips FoodHealth BeFitMotivation YourDailyVegan VegNews youcanbhealthy
+    FIT_MOTIVATION FitspirationaI HeaIthTips Raw_Vegan veganfuture vegancook101 Fitness_Femme YesGlutenFree
     """
 
     popular_list = popular_bag.split()
@@ -334,23 +335,27 @@ def rt_popular():
     t.statuses.retweet(id=_id)
 
 
-def fav_friends():
+def fav_friends(n=10):
     """
         Randomly favorite tweets from friends
     """
+    
+    for i in range(n):
+        
+        following = t.friends.ids(screen_name=TWITTER_HANDLE)["ids"]
+        shuffle(following)
+        print "user_id:", following[0]
+        tweets_list = t.statuses.user_timeline(_id=following[0])
+       
+        try:
+            for tweet in tweets_list:
+                if tweet['in_reply_to_status_id'] == None and not 'RT' in tweet['text']:
+                    t.favorites.create(_id=tweet['id'])
+                    print("favorited: %s" % (tweet["text"].encode("utf-8")))
+                    break
 
-    following = t.friends.ids(screen_name=TWITTER_HANDLE)["ids"]
-    shuffle(following)
+        # when you have already favorited a tweet, this error is thrown
+        except TwitterHTTPError as e:
+            print("error: %s" % (str(e)))
 
-    tweets_list = t.statuses.user_timeline(_id=following[0])
-
-    for tweet in tweets_list:
-        if tweet['in_reply_to_status_id'] == None and not 'RT' in tweet['text']:
-            t.favorites.create(_id=tweet['id'])
-            break
-
-fav_friends()
-
-
-
-
+#post_from_reddit('vegan')

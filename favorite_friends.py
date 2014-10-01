@@ -1,3 +1,8 @@
 from twitter_manager import *
 
-fav_friends()
+sleep(randrange(1500))
+
+det = randrange(2)
+
+if det == 1:
+    fav_friends(2)
