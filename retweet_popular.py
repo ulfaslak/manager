@@ -1,7 +1,6 @@
 from twitter_manager import *
 
-sleep(randrange(1500))
-det = randrange(6)
-
+det = randrange(7)
 if det == 1:
+    sleep(randrange(1500))
     rt_popular()

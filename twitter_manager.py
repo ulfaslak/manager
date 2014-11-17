@@ -33,9 +33,10 @@ from location_coordinates import *
 # twitter tokens, keys, secrets, and Twitter handle in the following variables
 CONSUMER_KEY = 'E19oBd9qdE1wXWiyixMfrubbI'
 CONSUMER_SECRET ='IU5qiEwHJgKAVJN0fXMux79yIzsMISSjLORB3j8sXXvUFddlnV'
-OAUTH_TOKEN = '2749655899-rBxZMaf3TSXnsrbhpRKm63ASU80BZpCrglobZKT'
-OAUTH_TOKEN_SECRET = 'pqMgG4KSVS395DNJ6snYKvQNjxbQg1ggHyglFEOutvLTy'
+OAUTH_TOKEN = '2749655899-u4geaWEZHlCXtvk12wlVJ84JmSX4HIQuD3FEsDQ'
+OAUTH_TOKEN_SECRET = 'NlUL020uY5mXW4nFonFI2PgWDMguv6V2aF9QGGQkCAly8'
 TWITTER_HANDLE = "FitVeganGirl_"
+TWITTER_ID = 2749655899
 
 # put the full path and file name of the file you want to store your "already followed"
 # list in
@@ -45,65 +46,24 @@ t = Twitter(auth=OAuth(OAUTH_TOKEN, OAUTH_TOKEN_SECRET,
             CONSUMER_KEY, CONSUMER_SECRET))
 
 
-def search_tweets(q, count=100, result_type="recent"):
+def search_tweets(q, count=100, result_type="recent", lang='en', geocode="37.539991,-122.165501,48km"):
     """
         Returns a list of tweets matching a certain phrase (hashtag, word, etc.)
     """
 
-    return t.search.tweets(q=q, result_type=result_type, count=count)
+    return t.search.tweets(q=q, result_type=result_type, count=count, lang=lang, geocode=geocode)
 
 
-def auto_fav(q, count=2, result_type="recent"):
-    """
-        Favorites tweets that match a certain phrase (hashtag, word, etc.)
-    """
 
-    result = search_tweets(q, count, result_type)
-
-    for tweet in result["statuses"]:
-        if is_feasable(tweet) and is_likely_english(tweet):
-            try:
-                # don't favorite your own tweets
-                if tweet["user"]["screen_name"] == TWITTER_HANDLE:
-                    continue
-
-                result = t.favorites.create(_id=tweet["id"])
-                print("favorited: %s" % (result["text"].encode("utf-8")))
-
-            # when you have already favorited a tweet, this error is thrown
-            except TwitterHTTPError as e:
-                print("error: %s" % (str(e)))
-
-
-def auto_rt(q, count=2, result_type="recent"):
-    """
-        Retweets tweets that match a certain phrase (hashtag, word, etc.)
-    """
-
-    result = search_tweets(q, count, result_type)
-
-    for tweet in result["statuses"]:
-        if is_feasable(tweet) and is_likely_english(tweet):
-            try:
-                # don't retweet your own tweets
-                if tweet["user"]["screen_name"] == TWITTER_HANDLE:
-                    continue
-
-                result = t.statuses.retweet(id=tweet["id"])
-                print("retweeted: %s" % (result["text"].encode("utf-8")))
-
-            # when you have already retweeted a tweet, this error is thrown
-            except TwitterHTTPError as e:
-                print("error: %s" % (str(e)))
-
-
-def auto_follow(q, count=10, result_type="recent"):
+def auto_follow(q, count=20):
     """
         Follows anyone who tweets about a specific phrase (hashtag, word, etc.)
     """
 
-    result = search_tweets(q, count, result_type)
+    result = search_tweets(q, count)
+    #print json.dumps(result,indent=1)
     following = set(t.friends.ids(screen_name=TWITTER_HANDLE)["ids"])
+    recently_followed = set()
 
     # make sure the "already followed" file exists
     if not os.path.isfile(ALREADY_FOLLOWED_FILE):
@@ -120,14 +80,15 @@ def auto_follow(q, count=10, result_type="recent"):
     do_not_follow.update(set(dnf_list))
     del dnf_list
 
-    print "Looking through the %d tweet(s):\n" % count
+    print "Looking through %d tweet(s):\n" % count
 #    for tweet in result['statuses']:
 #        print tweet['text']
 #    else:
 #        print "\n"
 
     for tweet in result["statuses"]:
-        if is_feasable(tweet) and is_likely_english(tweet):
+        print "---> Analysing user: %s" % tweet["user"]["screen_name"]
+        if is_feasable(tweet) and is_likely_english(tweet) and is_SF(tweet):
             try:
                 if (tweet["user"]["screen_name"] != TWITTER_HANDLE and
                         tweet["user"]["id"] not in following and
@@ -135,8 +96,11 @@ def auto_follow(q, count=10, result_type="recent"):
 
                     t.friendships.create(user_id=tweet["user"]["id"], follow=True)
                     following.update(set([tweet["user"]["id"]]))
+                    recently_followed.update(set([tweet["user"]["id"]]))
 
-                    print("followed %s" % (tweet["user"]["screen_name"]))
+                    print("Followed      %s" % (tweet["user"]["screen_name"]))
+                else:
+                    print "New user      False"
 
             except TwitterHTTPError as e:
                 print("error: %s" % (str(e)))
@@ -144,8 +108,31 @@ def auto_follow(q, count=10, result_type="recent"):
                 # quit on error unless it's because someone blocked me
                 if "blocked" not in str(e).lower():
                     quit()
+            print "\n"
         else:
+            print "\n"
             continue
+
+
+    # Writing recently followed users to 'recently_followed.csv'
+
+    existing_recently_followed = []
+    try:
+        with open('recently_followed.csv', 'r') as in_file:
+            for line in in_file:
+                existing_recently_followed.append(int(line))
+
+    except IOError:
+        with open('recently_followed.csv', 'w') as in_file:
+            pass
+
+
+    existing_recently_followed.extend(list(recently_followed))
+
+    with open('recently_followed.csv', 'w') as out_file:
+        for _id in list(existing_recently_followed):
+            out_file.write(str(_id) + '\n')
+
 
 
 def auto_follow_followers():
@@ -203,6 +190,8 @@ def auto_unfollow_nonfollowers():
             t.friendships.destroy(user_id=user_id)
             print("unfollowed %d" % (user_id))
 
+
+
 # -------------- HERE I CUSTOMIZE ----------------
 
 def trending_topics():
@@ -210,18 +199,23 @@ def trending_topics():
         Find trending topics to search for users with
     """
 
-    WORLD_WOE_ID = 1
-    US_WOE_ID = 23424977
+    #WORLD_WOE_ID = 1
+    #US_WOE_ID = 23424977
+    SF_WOE_ID = 2487956
 
-    world_trends =  t.trends.place(_id=WORLD_WOE_ID)
-    us_trends =     t.trends.place(_id=US_WOE_ID)
+    #world_trends =  t.trends.place(_id=WORLD_WOE_ID)
+    #us_trends =     t.trends.place(_id=US_WOE_ID)
+    sf_trends =     t.trends.place(_id=SF_WOE_ID)
 
-    world_trends_set =  set([trend['name'] for trend in world_trends[0]['trends']])
-    us_trends_set =     set([trend['name'] for trend in us_trends[0]['trends']])
-    common_trends_set = world_trends_set.intersection(us_trends_set)
-    common_trends_list = list(common_trends_set)
+    #world_trends_set =  set([trend['name'] for trend in world_trends[0]['trends']])
+    #us_trends_set =     set([trend['name'] for trend in us_trends[0]['trends']])
+    sf_trends_set =     set([trend['name'] for trend in sf_trends[0]['trends']])
 
-    q = common_trends_list[1]
+    #common_trends_set = sf_trends_set.intersection(us_trends_set)
+    #common_trends_list = list(common_trends_set)
+
+    #q = common_trends_list[1]
+    q = list(sf_trends_set)
     return q
 
 
@@ -241,8 +235,10 @@ def is_feasable(tweet):
     """
 
     if fol_fol_ratio(tweet) > 2.0/3:
+        print "Feasible      True"
         return True
     else:
+        print "Feasible      False"
         return False
 
 
@@ -259,7 +255,6 @@ def is_likely_english(tweet):
     #common_en_words_list = [(" " + word + " ") for word in common_en_words_str.split()]
     common_en_words_list = common_en_words_str.split()
 
-    return_type = False
     return_determinant = 0
 
     for word in common_en_words_list:
@@ -269,9 +264,35 @@ def is_likely_english(tweet):
             continue
 
     if return_determinant > 5:
-        return_type = True
+        print "English       True"
+        return True
+    
+    print "English       False"
+    return False
 
-    return return_type
+
+def is_SF(tweet):
+    """
+        Returns true if the tweet is geotagged, if there is SF in the user 
+        description or in the user location.
+    """
+    SF_words = ['sf ', ' sf', 'san francisco', 'frisco', 'giants', 'bay area', 
+                'silicon valley', 'the valley', 'san fran', 'sanfran']
+
+    if tweet['coordinates'] != None:
+        print "Coordinates   True"
+        return True
+
+    for word in SF_words:
+        if word in tweet['user']['description'].lower():
+            print "Description   True"
+            return True
+        elif word in tweet['user']['location'].lower():
+            print "Location      True"
+            return True
+
+    print "From SF       False"
+    return False
 
 
 def tweet_is_tweeted(tweet):
@@ -359,3 +380,4 @@ def fav_friends(n=10):
             print("error: %s" % (str(e)))
 
 #post_from_reddit('vegan')
+#auto_follow('#fitspo')
