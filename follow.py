@@ -1,15 +1,12 @@
 from twitter_manager import *
 
 print "Script: follow.py"
+
 # Keyword to search for users with
 hashtag_bag = """#fitness #fitlife #nevergiveup #fitfam #healthy #wellness 
 #fitblr #fitnessmotivation #inspiration #workoutmotivation #training #fitspo #fit
 #fitspiration #workhard #trainhard #inshape #endurance #healthyliving #eatclean
 """.split()
-
-hashtag_bag = ['healthy', '#fitness', '#sfgiants', 'Giants',
-        'the gym', 'exercise', 'beautiful', '#girl', '#summer',
-        'cardio', 'yoga', 'vegan', '#fitness', '#beach', '#love']
 
 shuffle(hashtag_bag)
 

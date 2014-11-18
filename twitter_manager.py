@@ -1,22 +1,4 @@
-"""
-Copyright 2014 Randal S. Olson
-
-This file is part of the Twitter Follow Bot library.
-
-The Twitter Follow Bot library is free software: you can redistribute it and/or
-modify it under the terms of the GNU General Public License as published by the
-Free Software Foundation, either version 3 of the License, or (at your option) any
-later version.
-
-The Twitter Follow Bot library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with the Twitter
-Follow Bot library. If not, see http://www.gnu.org/licenses/.
-"""
-
-from twitter import Twitter, OAuth, TwitterHTTPError
+from twitter import Twitter, OAuth, TwitterHTTPError, TwitterStream
 import os
 import io
 import urllib
@@ -38,11 +20,12 @@ OAUTH_TOKEN_SECRET = 'NlUL020uY5mXW4nFonFI2PgWDMguv6V2aF9QGGQkCAly8'
 TWITTER_HANDLE = "FitVeganGirl_"
 TWITTER_ID = 2749655899
 
-# put the full path and file name of the file you want to store your "already followed"
-# list in
 ALREADY_FOLLOWED_FILE = "already-followed.csv"
+CURRENT_FRIENDS_FILE = "current_friends.csv"
 
 t = Twitter(auth=OAuth(OAUTH_TOKEN, OAUTH_TOKEN_SECRET,
+            CONSUMER_KEY, CONSUMER_SECRET))
+ts = TwitterStream(auth=OAuth(OAUTH_TOKEN, OAUTH_TOKEN_SECRET,
             CONSUMER_KEY, CONSUMER_SECRET))
 
 
@@ -55,6 +38,35 @@ def search_tweets(q, count=100, result_type="recent", lang='en', geocode="37.539
 
 
 
+def write_user_to_current_friends(userid):
+    with open('current_friends.csv', 'r') as infile:
+        current_friends = []
+        for line in infile:
+            current_friends.append(int(line))
+
+    current_friends.append(userid)
+
+    with open('current_friends.csv', 'w') as outfile:
+        for userid in current_friends:
+            outfile.write(str(userid) + '\n')
+
+
+
+def write_user_to_already_followed(userid):
+    with open('already_followed.csv', 'r') as infile:
+        already_followed = []
+        for line in infile:
+            already_followed.append(int(line))
+
+    already_followed.append(userid)
+
+    with open('already_followed.csv', 'w') as outfile:
+        for userid in already_followed:
+            outfile.write(str(userid) + '\n')
+
+
+
+
 def auto_follow(q, count=20):
     """
         Follows anyone who tweets about a specific phrase (hashtag, word, etc.)
@@ -62,8 +74,7 @@ def auto_follow(q, count=20):
 
     result = search_tweets(q, count)
     #print json.dumps(result,indent=1)
-    following = set(t.friends.ids(screen_name=TWITTER_HANDLE)["ids"])
-    recently_followed = set()
+    friends_ = t.friends.ids(screen_name=TWITTER_HANDLE)["ids"]
 
     # make sure the "already followed" file exists
     if not os.path.isfile(ALREADY_FOLLOWED_FILE):
@@ -91,12 +102,13 @@ def auto_follow(q, count=20):
         if is_feasable(tweet) and is_likely_english(tweet) and is_SF(tweet):
             try:
                 if (tweet["user"]["screen_name"] != TWITTER_HANDLE and
-                        tweet["user"]["id"] not in following and
+                        tweet["user"]["id"] not in friends_ and
                         tweet["user"]["id"] not in do_not_follow):
 
                     t.friendships.create(user_id=tweet["user"]["id"], follow=True)
-                    following.update(set([tweet["user"]["id"]]))
-                    recently_followed.update(set([tweet["user"]["id"]]))
+                    
+                    write_user_to_current_friends(tweet["user"]["id"])
+                    write_user_to_already_followed(tweet["user"]["id"])
 
                     print("Followed      %s" % (tweet["user"]["screen_name"]))
                 else:
@@ -112,26 +124,6 @@ def auto_follow(q, count=20):
         else:
             print "\n"
             continue
-
-
-    # Writing recently followed users to 'recently_followed.csv'
-
-    existing_recently_followed = []
-    try:
-        with open('recently_followed.csv', 'r') as in_file:
-            for line in in_file:
-                existing_recently_followed.append(int(line))
-
-    except IOError:
-        with open('recently_followed.csv', 'w') as in_file:
-            pass
-
-
-    existing_recently_followed.extend(list(recently_followed))
-
-    with open('recently_followed.csv', 'w') as out_file:
-        for _id in list(existing_recently_followed):
-            out_file.write(str(_id) + '\n')
 
 
 
@@ -356,28 +348,7 @@ def rt_popular():
     t.statuses.retweet(id=_id)
 
 
-def fav_friends(n=10):
-    """
-        Randomly favorite tweets from friends
-    """
-    
-    for i in range(n):
-        
-        following = t.friends.ids(screen_name=TWITTER_HANDLE)["ids"]
-        shuffle(following)
-        print "user_id:", following[0]
-        tweets_list = t.statuses.user_timeline(_id=following[0])
-       
-        try:
-            for tweet in tweets_list:
-                if tweet['in_reply_to_status_id'] == None and not 'RT' in tweet['text']:
-                    t.favorites.create(_id=tweet['id'])
-                    print("favorited: %s" % (tweet["text"].encode("utf-8")))
-                    break
 
-        # when you have already favorited a tweet, this error is thrown
-        except TwitterHTTPError as e:
-            print("error: %s" % (str(e)))
 
 #post_from_reddit('vegan')
 #auto_follow('#fitspo')

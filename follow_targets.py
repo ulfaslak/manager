@@ -1,30 +1,13 @@
 from twitter_manager import *
 import requests as rq
 
-targets = rq.get(
-	'http://ec2-54-77-226-94.eu-west-1.compute.amazonaws.com/static/targets').text
+data = rq.get('http://ec2-54-77-226-94.eu-west-1.compute.amazonaws.com/static/targets').text
+targets = [ int(n) for n in data.split('\n')[:-1] ]
+friends = t.friends.ids(user_id=2749655899)['ids']
 
-targets = targets.split('\n')[:-1]
-targets = [ int(n) for n in targets ]
-targets.append(1853338002)
+for userid in targets:
+	if userid not in friends:
+		t.friendships.create(user_id=userid, follow=True)
+		write_user_to_current_friends(userid)
+		write_user_to_already_followed(userid)
 
-try:
-	with open('sf_targets.csv', 'r') as in_file:
-		used_targets = in_file.read().split('\n')[:-1]
-		used_targets = [ int(n) for n in used_targets ]
-except IOError:
-	with open('sf_targets.csv', 'w') as dummy:
-		used_targets = []
-
-new_targets = list(set(targets) - set(used_targets))
-
-for i in new_targets:
-	try:
-		t.friendships.create(user_id=i, follow=True)
-	except TwitterHTTPError:
-		print "User %d accept pending" % i
-	print "Followed", i
-
-with open('sf_targets.csv', 'w') as out_file:
-	for i in targets:
-		out_file.write(str(i) + '\n')

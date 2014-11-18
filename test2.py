@@ -55,13 +55,13 @@ def write_user_to_assholes(userid):
 
 oldest_friends = get_oldest_friends(100)
 
-followers_ = t.followers.ids(user_id=2749655899)['ids']
+followers = t.followers.ids(user_id=2749655899)['ids']
 
 
 for userid in oldest_friends:
 
 
-	if userid in followers_:
+	if userid in followers:
 		write_user_to_followbacks(userid)
 		print "Added user %d to followbacks." % userid
 
@@ -72,7 +72,7 @@ for userid in oldest_friends:
 
 	t.friendships.destroy(user_id=userid)
 
-print "Unfollowing users"
+
 
 
 

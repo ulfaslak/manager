@@ -1,9 +1,0 @@
-from twitter_manager import *
-
-print "Script: follow_trending.py"
-#sleep(randrange(540))
-# Terminal output
-
-keyword = trending_topics()[randrange(10)]
-print "\nSearching for users to follow in keyword: %s" % keyword
-auto_follow(keyword, count=10)
