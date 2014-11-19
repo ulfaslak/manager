@@ -199,13 +199,16 @@ def respond_user():
                                 print "Unicode Error in message but responding '%s' anyway" % response
 		except:
 			t.friendships.destroy(user_id=user_id)
+			remove_user_from_current_friends(user_id)
 			t.direct_messages.destroy(id=message_id)
+
 			try:
                                 print "Exception found, unfollowing user '%s' and deleting message '%s'." % (screen_name, message)
                         except:
                                 print "Unicode Error in message but deleting and unfollowing anyway."
 	else:
 		t.friendships.destroy(user_id=user_id)
+		remove_user_from_current_friends(user_id)
 		t.direct_messages.destroy(id=message_id)
                 try:
 		        print """Tweet filter caught spam '%s' in message '%s'. Unfollowing user '%s and deleting message.""" % (is_valid(message)['spam'], message, screen_name)

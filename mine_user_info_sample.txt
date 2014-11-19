@@ -1,0 +1,230 @@
+{
+ "contributors": null, 
+ "truncated": false, 
+ "text": "RT @treycausey: This real-time map of who's voting from @jsundram and the Facebook data team is pretty outstanding. https://t.co/q7kaqnSvCx", 
+ "in_reply_to_status_id": null, 
+ "id": 529734089902133250, 
+ "favorite_count": 0, 
+ "source": "<a href=\"https://about.twitter.com/products/tweetdeck\" rel=\"nofollow\">TweetDeck</a>", 
+ "retweeted": false, 
+ "coordinates": null, 
+ "entities": {
+  "symbols": [], 
+  "user_mentions": [
+   {
+    "id": 237254045, 
+    "indices": [
+     3, 
+     14
+    ], 
+    "id_str": "237254045", 
+    "screen_name": "treycausey", 
+    "name": "Trey Causey"
+   }, 
+   {
+    "id": 55677993, 
+    "indices": [
+     56, 
+     65
+    ], 
+    "id_str": "55677993", 
+    "screen_name": "jsundram", 
+    "name": "Jason Sundram"
+   }
+  ], 
+  "hashtags": [], 
+  "urls": [
+   {
+    "url": "https://t.co/q7kaqnSvCx", 
+    "indices": [
+     116, 
+     139
+    ], 
+    "expanded_url": "https://www.facebook.com/midtermelections/ivoted", 
+    "display_url": "facebook.com/midtermelectio\u2026"
+   }
+  ]
+ }, 
+ "in_reply_to_screen_name": null, 
+ "id_str": "529734089902133250", 
+ "retweet_count": 5, 
+ "in_reply_to_user_id": null, 
+ "favorited": false, 
+ "retweeted_status": {
+  "contributors": null, 
+  "truncated": false, 
+  "text": "This real-time map of who's voting from @jsundram and the Facebook data team is pretty outstanding. https://t.co/q7kaqnSvCx", 
+  "in_reply_to_status_id": null, 
+  "id": 529733737559633920, 
+  "favorite_count": 1, 
+  "source": "<a href=\"https://about.twitter.com/products/tweetdeck\" rel=\"nofollow\">TweetDeck</a>", 
+  "retweeted": false, 
+  "coordinates": null, 
+  "entities": {
+   "symbols": [], 
+   "user_mentions": [
+    {
+     "id": 55677993, 
+     "indices": [
+      40, 
+      49
+     ], 
+     "id_str": "55677993", 
+     "screen_name": "jsundram", 
+     "name": "Jason Sundram"
+    }
+   ], 
+   "hashtags": [], 
+   "urls": [
+    {
+     "url": "https://t.co/q7kaqnSvCx", 
+     "indices": [
+      100, 
+      123
+     ], 
+     "expanded_url": "https://www.facebook.com/midtermelections/ivoted", 
+     "display_url": "facebook.com/midtermelectio\u2026"
+    }
+   ]
+  }, 
+  "in_reply_to_screen_name": null, 
+  "id_str": "529733737559633920", 
+  "retweet_count": 5, 
+  "in_reply_to_user_id": null, 
+  "favorited": false, 
+  "user": {
+   "follow_request_sent": false, 
+   "profile_use_background_image": true, 
+   "profile_text_color": "333333", 
+   "default_profile_image": false, 
+   "id": 237254045, 
+   "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme6/bg.gif", 
+   "verified": false, 
+   "profile_location": null, 
+   "profile_image_url_https": "https://pbs.twimg.com/profile_images/435146240418803712/247fSb5V_normal.jpeg", 
+   "profile_sidebar_fill_color": "A0C5C7", 
+   "entities": {
+    "url": {
+     "urls": [
+      {
+       "url": "http://t.co/bakfiW3gb3", 
+       "indices": [
+        0, 
+        22
+       ], 
+       "expanded_url": "http://treycausey.com", 
+       "display_url": "treycausey.com"
+      }
+     ]
+    }, 
+    "description": {
+     "urls": []
+    }
+   }, 
+   "followers_count": 3346, 
+   "profile_sidebar_border_color": "86A4A6", 
+   "id_str": "237254045", 
+   "profile_background_color": "709397", 
+   "listed_count": 277, 
+   "is_translation_enabled": false, 
+   "utc_offset": -28800, 
+   "statuses_count": 25197, 
+   "description": "Data science and sports, but not always simultaneously. I blog occasionally about both @_thespread.", 
+   "friends_count": 763, 
+   "location": "Seattle, WA", 
+   "profile_link_color": "FF3300", 
+   "profile_image_url": "http://pbs.twimg.com/profile_images/435146240418803712/247fSb5V_normal.jpeg", 
+   "following": false, 
+   "geo_enabled": true, 
+   "profile_banner_url": "https://pbs.twimg.com/profile_banners/237254045/1404740206", 
+   "profile_background_image_url": "http://abs.twimg.com/images/themes/theme6/bg.gif", 
+   "name": "Trey Causey", 
+   "lang": "en", 
+   "profile_background_tile": false, 
+   "favourites_count": 658, 
+   "screen_name": "treycausey", 
+   "notifications": false, 
+   "url": "http://t.co/bakfiW3gb3", 
+   "created_at": "Wed Jan 12 12:39:00 +0000 2011", 
+   "contributors_enabled": false, 
+   "time_zone": "Pacific Time (US & Canada)", 
+   "protected": false, 
+   "default_profile": false, 
+   "is_translator": false
+  }, 
+  "geo": null, 
+  "in_reply_to_user_id_str": null, 
+  "possibly_sensitive": false, 
+  "lang": "en", 
+  "created_at": "Tue Nov 04 20:35:39 +0000 2014", 
+  "in_reply_to_status_id_str": null, 
+  "place": null
+ }, 
+ "user": {
+  "follow_request_sent": false, 
+  "profile_use_background_image": true, 
+  "profile_text_color": "333333", 
+  "default_profile_image": false, 
+  "id": 16629994, 
+  "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme15/bg.png", 
+  "verified": false, 
+  "profile_location": null, 
+  "profile_image_url_https": "https://pbs.twimg.com/profile_images/493863786504151040/1lKDAp5f_normal.jpeg", 
+  "profile_sidebar_fill_color": "C0DFEC", 
+  "entities": {
+   "url": {
+    "urls": [
+     {
+      "url": "http://t.co/hCPsBnu0ZI", 
+      "indices": [
+       0, 
+       22
+      ], 
+      "expanded_url": "http://www.brianckeegan.com", 
+      "display_url": "brianckeegan.com"
+     }
+    ]
+   }, 
+   "description": {
+    "urls": []
+   }
+  }, 
+  "followers_count": 3168, 
+  "profile_sidebar_border_color": "A8C7F7", 
+  "id_str": "16629994", 
+  "profile_background_color": "022330", 
+  "listed_count": 255, 
+  "is_translation_enabled": false, 
+  "utc_offset": -18000, 
+  "statuses_count": 17505, 
+  "description": "Scientist of networks, data, & social computing. Researcher at @HarvardHBS @HarvardHBX. @MIT SB '06, @NorthwesternU PhD '12, @DavidLazer postdoc '14.", 
+  "friends_count": 874, 
+  "location": "Cambridge, MA", 
+  "profile_link_color": "0084B4", 
+  "profile_image_url": "http://pbs.twimg.com/profile_images/493863786504151040/1lKDAp5f_normal.jpeg", 
+  "following": false, 
+  "geo_enabled": true, 
+  "profile_banner_url": "https://pbs.twimg.com/profile_banners/16629994/1349830806", 
+  "profile_background_image_url": "http://abs.twimg.com/images/themes/theme15/bg.png", 
+  "name": "Brian Keegan", 
+  "lang": "en", 
+  "profile_background_tile": false, 
+  "favourites_count": 844, 
+  "screen_name": "bkeegan", 
+  "notifications": false, 
+  "url": "http://t.co/hCPsBnu0ZI", 
+  "created_at": "Tue Oct 07 14:09:00 +0000 2008", 
+  "contributors_enabled": false, 
+  "time_zone": "Eastern Time (US & Canada)", 
+  "protected": false, 
+  "default_profile": false, 
+  "is_translator": false
+ }, 
+ "geo": null, 
+ "in_reply_to_user_id_str": null, 
+ "possibly_sensitive": false, 
+ "lang": "en", 
+ …, 
+ "in_reply_to_status_id_str": null, 
+ "place": null
+}

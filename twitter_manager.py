@@ -66,6 +66,24 @@ def write_user_to_already_followed(userid):
 
 
 
+def remove_user_from_current_friends(userid):
+    with open('current_friends.csv', 'r') as infile:
+        current_friends = []
+        for line in infile:
+            current_friends.append(int(line))
+
+    try:
+        current_friends.remove(userid)
+    except ValueError:
+        print "User %d was not found in current_friends.csv. Can't remove user from list."
+
+    with open('current_friends.csv', 'w') as outfile:
+        for userid in current_friends:
+            outfile.write(str(userid) + '\n')
+
+
+
+
 
 def auto_follow(q, count=20):
     """
