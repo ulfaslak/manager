@@ -53,7 +53,7 @@ def write_user_to_assholes(userid):
 
 
 
-oldest_friends = get_oldest_friends(100)
+oldest_friends = get_oldest_friends(4)
 
 followers_ = t.followers.ids(user_id=2749655899)['ids']
 

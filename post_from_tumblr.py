@@ -1,7 +1,7 @@
 from twitter_manager import *
 from tumblr_manager import *
 
-det = randrange(12)
+#det = randrange(12)
 det = 1
 if det == 1:
 

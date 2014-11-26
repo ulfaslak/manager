@@ -1,5 +1,6 @@
 from twitter_manager import *
 from datetime import date
+import sys
 
 
 def get_word_scores():
@@ -135,7 +136,7 @@ def avg_reciprocal_friend_happiness(user_profile):
         try:
             avg_happiness = avg_tweet_happiness(user_tweets)
         except:
-            print "...in avg_reciprocal_friend_happiness ---> couldn't calculate avg_happiness for %d, friend of %d." % (userid, user_id)
+            print "...in avg_reciprocal_friend_happiness ---> couldn't calculate avg_happiness for %d, friend of %d.\n\n Errormessage:\n\n" % (userid, user_id), sys.exc_info()[0]
             continue
         values.append(avg_happiness)
 
@@ -161,7 +162,7 @@ def avg_non_reciprocal_friend_happiness(user_profile):
         try:
             avg_happiness = avg_tweet_happiness(user_tweets)
         except:
-            print "...in avg_non_reciprocal_friend_happiness ---> couldn't calculate avg_happiness for %d, friend of %d." % (userid, user_id)
+            print "...in avg_non_reciprocal_friend_happiness ---> couldn't calculate avg_happiness for %d, friend of %d.\n\n Errormessage:\n\n" % (userid, user_id), sys.exc_info()[0]
             continue
         values.append(avg_happiness)
 
@@ -218,14 +219,14 @@ def originals_to_statuses_ratio(user_tweets):
     return originals / float(len(user_tweets))
 
 
-def friends_following_me(user_profile):
+def friends_following_me_to_friends_ratio(user_profile):
 
     userid = user_profile['id']
 
     friends, _, _ = friends_followers_reciprocals(userid)
     _, followers, _ = friends_followers_reciprocals(2749655899) # FitVeganGirl_
 
-    return len(list(set(friends) & set(followers)))
+    return len(list(set(friends) & set(followers))) / float(len(friends))
 
 
 
@@ -296,7 +297,7 @@ def write_featureset(userid):#,list):
         X_i.append(avg_tweet_happiness(user_tweets))
         print "Successfully appended avg_tweet_happiness to featureset."
     except:
-        print "Can't extract avg_tweet_happiness. Appending 0."
+        print "Can't extract avg_tweet_happiness. Appending 0. Errormessage:\n\n", sys.exc_info()[0]
         X_i.append(0)
 
         #X_i.append(avg_reciprocal_friend_happiness(user_profile)) # We know this is roughly the same as the users own happiness, no need including it
@@ -343,8 +344,8 @@ def write_featureset(userid):#,list):
         X_i.append(0)
 
     try:
-        X_i.append(friends_following_me(user_profile))
-        print "Successfully appended friends_following_me to featureset."
+        X_i.append(friends_following_me_to_friends_ratio(user_profile))
+        print "Successfully appended friends_following_me_to_friends_ratio to featureset."
     except:
         print "Can't extract friends_following_me. Appending 0."
         X_i.append(0)

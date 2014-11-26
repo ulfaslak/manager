@@ -5,7 +5,7 @@ from time import sleep
 import sys
 
 
-already_mined = [ int(f) for f in listdir('features_assholes')[1:] ]
+already_mined = [ int(f) for f in listdir('features_assholes') ]
 
 assholes = []
 with open('assholes.csv', 'r') as infile:

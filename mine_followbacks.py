@@ -2,9 +2,10 @@ from mine_user_info import write_featureset
 from os import listdir
 from os.path import isfile, join
 from time import sleep
+import sys
 
 
-already_mined = [ int(f) for f in listdir('features_followbacks')[1:] ]
+already_mined = [ int(f) for f in listdir('features_followbacks') ]
 
 followbacks = []
 with open('followbacks.csv', 'r') as infile:
